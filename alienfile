@@ -1,0 +1,55 @@
+use alienfile;
+use autodie;
+
+use Path::Tiny;
+use IPC::Run3;
+use CInet::Alien::GMPxx;
+
+configure {
+    requires 'Path::Tiny';
+    requires 'IPC::Run3';
+    requires 'CInet::Alien::GMPxx';
+};
+
+share {
+    start_url 'soplex-6.0.3.tgz';
+    plugin 'Fetch::Local';
+    plugin 'Extract::Negotiate';
+
+    patch [
+        '%{patch} -p1 <%{.install.patch}/cmake-build-static.patch',
+    ];
+
+    plugin 'Build::CMake';
+    build [
+        [
+            '%{cmake}',
+            '-DCMAKE_BUILD_TYPE=Release',
+            '-DCMAKE_INSTALL_PREFIX:PATH=%{.install.prefix}',
+            '-DCMAKE_MAKE_PROGRAM:PATH=%{make}',
+            '-DBOOST=ON',
+            '-DGMP=ON', '-DSTATIC_GMP=ON',
+            '-DGMP_DIR=' . CInet::Alien::GMPxx->dist_dir,
+            '-DCMAKE_EXE_LINKER_FLAGS=-static',
+            '-DCMAKE_SKIP_RPATH=ON',
+            '%{.install.extract}'
+        ],
+        '%{make} soplex',
+        '%{make} install',
+    ];
+};
+
+gather sub {
+    my $build = shift;
+    my $exename = $build->runtime_prop->{exename} =
+        'soplex';
+
+    # XXX: Somehow the DESTDIR prefix is needed.
+    my $exe = path($ENV{DESTDIR}, $build->install_prop->{prefix}, 'bin', $exename);
+    run3 [$exe], \undef, \my $stdout;
+    chomp $stdout;
+    if ($stdout =~ /^SoPlex version ([0-9.a-z]+)/) {
+        $build->runtime_prop->{versionline} = $stdout;
+        $build->runtime_prop->{version} = $1;
+    }
+};
