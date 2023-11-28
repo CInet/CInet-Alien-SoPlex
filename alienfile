@@ -46,7 +46,7 @@ gather sub {
 
     # XXX: Somehow the DESTDIR prefix is needed.
     my $exe = path($ENV{DESTDIR}, $build->install_prop->{prefix}, 'bin', $exename);
-    run3 [$exe], \undef, \my $stdout;
+    run3 [$exe, '--version'], \undef, \my $stdout;
     chomp $stdout;
     if ($stdout =~ /^SoPlex version ([0-9.a-z]+)/) {
         $build->runtime_prop->{versionline} = $stdout;
