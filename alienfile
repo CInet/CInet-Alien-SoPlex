@@ -12,7 +12,7 @@ configure {
 };
 
 share {
-    start_url 'soplex-6.0.3.tgz';
+    start_url 'soplex-release-711.tar.gz';
     plugin 'Fetch::Local';
     plugin 'Extract::Negotiate';
 

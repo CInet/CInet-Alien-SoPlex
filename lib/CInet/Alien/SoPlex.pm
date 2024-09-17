@@ -21,11 +21,11 @@ use base qw(Alien::Base);
 
 =head2 VERSION
 
-This document describes CInet::Alien::SoPlex v1.0.0.
+This document describes CInet::Alien::SoPlex v1.0.2.
 
 =cut
 
-our $VERSION = "v1.0.0";
+our $VERSION = "v1.0.2";
 
 =head1 DESCRIPTION
 
@@ -105,8 +105,8 @@ modify it under the terms of the Artistic License 2.0.
 
 =head2 Bundled software
 
-This software distribution contains a source code archive of SoPlex v6.0.3,
-which is Copyright (C) 2002-2022 Zuse Institute Berlin. It is released under
+This software distribution contains a source code archive of SoPlex v7.1.1,
+which is Copyright (C) 2002-2024 Zuse Institute Berlin. It is released under
 the Apache 2.0 license.
 
 =cut
